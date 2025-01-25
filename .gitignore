@@ -1,0 +1,55 @@
+# UE5 specific
+*.sln
+*.xcodeproj
+*.vs2019
+*.vs2017
+.vscode/
+*.uprojectdirs
+*.usf
+*.ubt*
+
+# Build folders
+/Binaries/
+/Intermediate/
+/Saved/
+
+# VS/VSCode specific
+.vscode/
+.vs/
+/.vsconfig
+*.user
+*.userprefs
+.idea/
+
+# Unreal Engine 5 Derived Files
+DerivedDataCache/
+*.pdb
+*.log
+*.vs2019/
+*.vs2017/
+
+# Compiled source files
+*.dll
+*.exe
+*.lib
+*.app
+*.a
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*.suo
+*.sdf
+*.cache
+
+# Other IDE configurations
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+
+# MacOS Finder
+.DS_Store
+
+# Windows Thumbs.db
+Thumbs.db
