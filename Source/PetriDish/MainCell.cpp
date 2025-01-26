@@ -51,6 +51,9 @@ void AMainCell::BeginPlay()
     // Add a movement component for simple floating-style movement
     MovementComponent = GetComponentByClass<UFloatingPawnMovement>();
     MovementComponent->UpdatedComponent = SphereCollider;
+
+    EdroIdleAnimation = Cast<UPaperFlipbookComponent>(GetDefaultSubobjectByName(TEXT("edro")));
+    BarierIdleAnimation = Cast<UPaperFlipbookComponent>(GetDefaultSubobjectByName(TEXT("barier")));
 }
 
 // Called every frame
@@ -70,6 +73,8 @@ void AMainCell::Tick(float DeltaTime)
         FVector Torque = FVector(0.0f, 0.0f, -FMath::Sign(AngularVelocity.Z) * RotateFrictionMult);
         SphereCollider->AddTorqueInRadians(Torque);
     }
+
+    PlayMoveAnimation(Velocity.Size() > MinSpeed);
 }
 
 // Called to bind functionality to input
@@ -139,11 +144,18 @@ void AMainCell::RorateRight(const FInputActionValue& Value)
 }
 
 void AMainCell::PlayMoveAnimation(bool isMoving) {
+    
+    BarierIdleAnimation->SetFlipbook(BarierIdleAnimationClip);
+    EdroIdleAnimation->SetFlipbook(EdroIdleAnimationClip);
     if (isMoving) {
-        //EdroIdleAnimation->Play();
+        BarierIdleAnimation->Play();
+        EdroIdleAnimation->Stop();
+        EdroIdleAnimation->SetPlaybackPosition(0.0f, false);
     }
     else {
-
+        EdroIdleAnimation->Play();
+        BarierIdleAnimation->Stop();
+        BarierIdleAnimation->SetPlaybackPosition(0.0f, false);
     }
 }
 

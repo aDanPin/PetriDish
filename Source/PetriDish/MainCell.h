@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InputActionValue.h" 
-#include "PaperFlipbookComponent.h"
+#include "PaperFlipbook.h"
+#include "PaperFlipbookComponent.h"    
 #include "MainCell.generated.h"
 
 UCLASS()
@@ -83,10 +84,16 @@ private:
 	float MinRotationSpeed;
 
 	UPROPERTY(EditAnywhere, Category = "Animations")
-	UPaperFlipbook* EdroIdleAnimation;
+	UPaperFlipbookComponent* EdroIdleAnimation;
 
 	UPROPERTY(EditAnywhere, Category = "Animations")
-	UPaperFlipbook* BarierIdleAnimation;
+	UPaperFlipbookComponent* BarierIdleAnimation;
+
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	UPaperFlipbook* EdroIdleAnimationClip;
+
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	UPaperFlipbook* BarierIdleAnimationClip;
 
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* SphereCollider;
