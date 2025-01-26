@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InputActionValue.h" 
+#include "PaperFlipbookComponent.h"
 #include "MainCell.generated.h"
 
 UCLASS()
@@ -79,6 +80,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "WASD Movement")
 	float MinRotationSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animations")
+	UPaperFlipbook* IdleAnimation;
 
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* SphereCollider;
