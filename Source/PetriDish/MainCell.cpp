@@ -4,12 +4,17 @@
 #include "MainCell.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
-#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 
 #include "PaperFlipbook.h"
 #include "PaperFlipbookComponent.h"    
+
+#include "Enemy.h"
+#include "Resource.h"
+
+#include <cmath>
 
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
@@ -44,10 +49,10 @@ void AMainCell::BeginPlay()
     }
 
     // Create the sphere collider
-    SphereCollider = GetComponentByClass<USphereComponent>();
-    // SphereCollider->SetSimulatePhysics(true);
-    // SphereCollider->SetCollisionProfileName(TEXT("PhysicsActor"));
- 
+    SphereCollider = GetComponentByClass<UCapsuleComponent>();
+    // SphereCollider->OnComponentBeginOverlap.Add(this, &AMainCell::OnCollisionBegin);
+    SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &AMainCell::OnCollisionBegin);
+
     // Add a movement component for simple floating-style movement
     MovementComponent = GetComponentByClass<UFloatingPawnMovement>();
     MovementComponent->UpdatedComponent = SphereCollider;
@@ -75,6 +80,8 @@ void AMainCell::Tick(float DeltaTime)
     }
 
     PlayMoveAnimation(Velocity.Size() > MinSpeed);
+
+    SetActorLocation({ GetActorLocation().X, GetActorLocation().Y, 100. });
 }
 
 // Called to bind functionality to input
@@ -157,6 +164,49 @@ void AMainCell::PlayMoveAnimation(bool isMoving) {
         BarierIdleAnimation->Stop();
         BarierIdleAnimation->SetPlaybackPosition(0.0f, false);
     }
+}
+
+void AMainCell::OnCollisionBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+    const FHitResult& SweepResult) {
+    
+    if (OtherActor && (OtherActor != this))
+    {
+        {
+            APawn* OtherPawn = Cast<AEnemy>(OtherActor);
+            if (OtherPawn) {
+                Damage();
+            }
+        }
+        {
+            APawn* OtherPawn = Cast<AResource>(OtherActor);
+            if (OtherPawn) {
+                OtherPawn->Destroy();
+                Eat();
+            }
+        }
+    }
+}
+
+void AMainCell::Eat() {
+    CurrentAmount += 1;
+    
+    float mult = FMath::Square(CurrentAmount) / 100. + NormalScale;
+    BarierIdleAnimation->SetRelativeScale3D({mult, mult, mult});
+    SphereCollider->SetCapsuleRadius(FMath::Square(CurrentAmount) / 100. + NormalRadious);
+    SphereCollider->SetMassOverrideInKg(NAME_None, FMath::Square(CurrentAmount) / 100. + 1, true);
+    if (CurrentAmount > MaxAmmount) {
+        //
+    }
+}
+
+void AMainCell::Damage() {
+    CurrentAmount = (int)ceil(CurrentAmount * 0.7);
+
+    float mult = FMath::Square(CurrentAmount) / 100. + NormalScale;
+    SphereCollider->SetCapsuleRadius(FMath::Square(CurrentAmount) / 100. + NormalRadious);
+    SphereCollider->SetMassOverrideInKg(NAME_None, FMath::Square(CurrentAmount) / 100. + 1, true);
+    BarierIdleAnimation->SetRelativeScale3D({ mult, mult, mult });
 }
 
 void AMainCell::MoveToCursor()

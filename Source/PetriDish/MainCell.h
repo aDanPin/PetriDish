@@ -35,6 +35,9 @@ public:
 
 	void PlayMoveAnimation(bool isMoving);
 
+	void Eat();
+	void Damage();
+
 private:
 	void MoveToCursor();
 
@@ -95,6 +98,26 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	UPaperFlipbook* BarierIdleAnimationClip;
 
+	UPROPERTY(EditAnywhere, Category = "Eating")
+	int CurrentAmount;
+
+	UPROPERTY(EditAnywhere, Category = "Eating")
+	int TargetAmmount;
+
+	UPROPERTY(EditAnywhere, Category = "Eating")
+	int MaxAmmount;
+	UPROPERTY(EditAnywhere, Category = "Eating")
+	float NormalScale;
+
+	UPROPERTY(EditAnywhere, Category = "Eating")
+	float NormalRadious;
+
+
 	UPROPERTY(VisibleAnywhere)
-	class USphereComponent* SphereCollider;
+	class UCapsuleComponent* SphereCollider;
+
+	UFUNCTION()
+	void OnCollisionBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+						UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+						const FHitResult& SweepResult);
 };
