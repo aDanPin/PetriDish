@@ -119,6 +119,7 @@ void AMainCell::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AMainCell::MoveForward(const FInputActionValue& Value)
 {
+    if (isDead) return;
     float InputValue = Value.Get<float>();
     if (InputValue != 0.0f)
     {
@@ -130,6 +131,7 @@ void AMainCell::MoveForward(const FInputActionValue& Value)
 
 void AMainCell::MoveRight(const FInputActionValue& Value)
 {
+    if (isDead) return;
     float InputValue = Value.Get<float>();
     if (InputValue != 0.0f)
     {
@@ -151,7 +153,8 @@ void AMainCell::RorateRight(const FInputActionValue& Value)
 }
 
 void AMainCell::PlayMoveAnimation(bool isMoving) {
-    
+    if (isDead) return;
+
     BarierIdleAnimation->SetFlipbook(BarierIdleAnimationClip);
     EdroIdleAnimation->SetFlipbook(EdroIdleAnimationClip);
     if (isMoving) {
@@ -188,6 +191,13 @@ void AMainCell::OnCollisionBegin(UPrimitiveComponent* OverlappedComponent, AActo
     }
 }
 
+void AMainCell::Die() {
+    isDead = true;
+
+    BarierIdleAnimation->SetFlipbook(BarierPopAnimationClip);
+    BarierIdleAnimation->SetLooping(false);
+}
+
 void AMainCell::Eat() {
     CurrentAmount += 1;
     
@@ -196,7 +206,7 @@ void AMainCell::Eat() {
     SphereCollider->SetCapsuleRadius(FMath::Square(CurrentAmount) / 100. + NormalRadious);
     SphereCollider->SetMassOverrideInKg(NAME_None, FMath::Square(CurrentAmount) / 100. + 1, true);
     if (CurrentAmount > MaxAmmount) {
-        //
+        Die();
     }
 }
 
@@ -207,6 +217,8 @@ void AMainCell::Damage() {
     SphereCollider->SetCapsuleRadius(FMath::Square(CurrentAmount) / 100. + NormalRadious);
     SphereCollider->SetMassOverrideInKg(NAME_None, FMath::Square(CurrentAmount) / 100. + 1, true);
     BarierIdleAnimation->SetRelativeScale3D({ mult, mult, mult });
+
+    if (CurrentAmount <= 1) Die();
 }
 
 void AMainCell::MoveToCursor()

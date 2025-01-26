@@ -37,6 +37,7 @@ public:
 
 	void Eat();
 	void Damage();
+	void Die();
 
 private:
 	void MoveToCursor();
@@ -97,6 +98,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	UPaperFlipbook* BarierIdleAnimationClip;
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	UPaperFlipbook* BarierPopAnimationClip;
 
 	UPROPERTY(EditAnywhere, Category = "Eating")
 	int CurrentAmount;
@@ -112,6 +115,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Eating")
 	float NormalRadious;
 
+
+	float LockAnim;
+	UPROPERTY(VisibleAnywhere, Category = "Dead")
+	bool isDead;
 
 	UPROPERTY(VisibleAnywhere)
 	class UCapsuleComponent* SphereCollider;
