@@ -8,6 +8,9 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
 
+#include "PaperFlipbook.h"
+#include "PaperFlipbookComponent.h"    
+
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -132,6 +135,15 @@ void AMainCell::RorateRight(const FInputActionValue& Value)
         // Apply torque for rotation
         FVector Torque = FVector(0.0f, 0.0f, InputValue * RotationTorque);
         SphereCollider->AddTorqueInRadians(Torque);
+    }
+}
+
+void AMainCell::PlayMoveAnimation(bool isMoving) {
+    if (isMoving) {
+        //EdroIdleAnimation->Play();
+    }
+    else {
+
     }
 }
 

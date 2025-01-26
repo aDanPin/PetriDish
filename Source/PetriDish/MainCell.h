@@ -32,6 +32,8 @@ public:
 	void MoveRight(const FInputActionValue& Value);
 	void RorateRight(const FInputActionValue& Value);
 
+	void PlayMoveAnimation(bool isMoving);
+
 private:
 	void MoveToCursor();
 
@@ -80,8 +82,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = "WASD Movement")
 	float MinRotationSpeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animations")
-	UPaperFlipbook* IdleAnimation;
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	UPaperFlipbook* EdroIdleAnimation;
+
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	UPaperFlipbook* BarierIdleAnimation;
 
 	UPROPERTY(VisibleAnywhere)
 	class USphereComponent* SphereCollider;
